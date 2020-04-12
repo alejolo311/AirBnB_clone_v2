@@ -1,7 +1,9 @@
 #!/usr/bin/python3
-# compress  the contents of the web_static folder
+"""Fabric script deploy all the app
+"""
 
-from fabric.api import run, local, sudo
+from fabric.api import *
+from os import path
 from datetime import datetime
 
 n = datetime.now()
@@ -63,7 +65,7 @@ def do_deploy(archive_path):
 
 
 def deploy():
-    """Distribute to all servers
+    """deploy all
     """
     archive_path = do_pack()
     if archive_path is None:
