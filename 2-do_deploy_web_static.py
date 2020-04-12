@@ -1,33 +1,49 @@
 #!/usr/bin/python3
-# do the deploy
+""" deploy with fabric of static files of aribnb
+"""
 
 from fabric.api import *
 from os import path
-from shlex import split
 
-env.user = 'ubuntu'
 env.hosts = ['34.74.140.171', '	3.95.67.118']
 
 
 def do_deploy(archive_path):
-    """Deploy"""
+    """Deploy
+    """
     if not path.exists(archive_path):
         return False
-    try:
-        put(archive_path, '/tmp/')
-        _file_ext = archive_path.split("/")[1]
-        _file = name_file_ext.split(".")[0]
-        run('mkdir -p /data/web_static/releases/' + _file)
-        run('tar -xzf /tmp/' + _file_ext +
-            ' -C /data/web_static/releases/' + _file)
-        run('rm /tmp/' + _file_ext)
-        run('mv /data/web_static/releases/' + _file +
-            '/web_static/* /data/web_static/releases/' + _file + '/')
-        run('rm -rf /data/web_static/releases/' + _file + '/web_static')
-        run('rm -rf /data/web_static/current')
-        run('ln -sf /data/web_static/releases/' + _file +
-            '/' + ' /data/web_static/current')
-        print("New version deployed!")
-        return True
-    except:
-        return False
+    ret_value = True
+    d_folder = put(archive_path, '/tmp/')
+    if d_folder.failed:
+        ret_value = False
+    archive_file = archive_path.replace(".tgz", "").replace("versions/", "")
+    d_dest = run('mkdir -p /data/web_static/releases/' + archive_file + '/')
+    if d_dest.failed:
+        ret_value = False
+    d_unpack = run('tar -xzf /tmp/' + archive_file + '.tgz' +
+                   ' -C /data/web_static/releases/' + archive_file + '/')
+    if d_unpack.failed:
+        ret_value = False
+    d_cleanfile = run('rm /tmp/' + archive_file + '.tgz')
+    if d_cleanfile.failed:
+        ret_value = False
+    d_move = run('mv /data/web_static/releases/' + archive_file +
+                 '/web_static/* /data/web_static/releases/' + archive_file +
+                 '/')
+    if d_move.failed:
+        ret_value = False
+    d_cleanfolder = run('rm -rf /data/web_static/releases/' + archive_file +
+                        '/web_static')
+    if d_cleanfolder.failed:
+        ret_value = False
+    d_removeold = run('rm -rf /data/web_static/current')
+    if d_removeold.failed:
+        ret_value = False
+    d_createnew = run('ln -sf /data/web_static/releases/' + archive_file +
+                      '/' + ' /data/web_static/current')
+    if d_createnew.failed:
+        ret_value = False
+    if ret_value:
+        print("All tasks succeeded!")
+    return ret_value
