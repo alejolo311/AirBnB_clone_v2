@@ -13,8 +13,6 @@ def do_deploy(archive_path):
     """Deploy"""
     if not path.exists(archive_path):
         return False
-    if (path.exists(archive_path) and path.isdir(archive_path)):
-        return False
     try:
         put(archive_path, '/tmp/')
         _file_ext = archive_path.split("/")[1]
