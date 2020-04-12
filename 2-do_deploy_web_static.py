@@ -15,18 +15,19 @@ def do_deploy(archive_path):
     if (path.exists(archive_path) and path.isdir(archive_path)):
         return False
     try:
-        task_1 = put(archive_path, '/tmp/')
-        _file = archive_path.replace(".tgz", "").replace("versions/", "")
-        task_2 = run('mkdir -p /data/web_static/releases/' + _file + '/')
-        task_3 = run('tar -xzf /tmp/' + _file + '.tgz' +
-                    ' -C /data/web_static/releases/' + _file + '/')
-        task_4 = run('rm /tmp/' + _file + '.tgz')
-        task_5 = run('mv /data/web_static/releases/' + _file +
-                    '/web_static/* /data/web_static/releases/' + _file + '/')
-        task_6 = run('rm -rf /data/web_static/releases/' + _file + '/web_static')
-        task_7 = run('rm -rf /data/web_static/current')
-        task_8 = run('ln -sf /data/web_static/releases/' + _file +
-                    '/' + ' /data/web_static/current')
+        put(archive_path, '/tmp/')
+        _file_ext = archive_path.split("/")[1]
+        _file = name_file_ext.split(".")[0]
+        run('mkdir -p /data/web_static/releases/' + _file)
+        run('tar -xzf /tmp/' + _file_ext +
+            ' -C /data/web_static/releases/' + _file)
+        run('rm /tmp/' + _file_ext)
+        run('mv /data/web_static/releases/' + _file +
+            '/web_static/* /data/web_static/releases/' + _file + '/')
+        run('rm -rf /data/web_static/releases/' + _file + '/web_static')
+        run('rm -rf /data/web_static/current')
+        run('ln -sf /data/web_static/releases/' + _file +
+            '/' + ' /data/web_static/current')
         print("New version deployed!")
         return True
     except:
