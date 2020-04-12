@@ -3,6 +3,7 @@
 
 from fabric.api import *
 from os import path
+from shlex import split
 
 env.user = 'ubuntu'
 env.hosts = ['34.74.140.171', '	3.95.67.118']
