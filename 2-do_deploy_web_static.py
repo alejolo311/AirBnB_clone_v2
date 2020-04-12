@@ -9,7 +9,7 @@ env.hosts = ['34.74.140.171', '	3.95.67.118']
 
 
 def do_deploy(archive_path):
-    """Deploy
+    """Deploy the airbnb static
     """
     if not path.exists(archive_path):
         return False
