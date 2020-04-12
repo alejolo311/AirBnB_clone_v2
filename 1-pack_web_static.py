@@ -6,11 +6,12 @@ from datetime import datetime
 
 n = datetime.now()
 
+
 def do_pack():
     """Packs"""
 
     fn = 'versions/web_static_{}{}{}{}{}{}.tgz'\
-                .format(n.year, n.month, n.day, n.hour, n.minute, n.second)
+        .format(n.year, n.month, n.day, n.hour, n.minute, n.second)
     local('mkdir -p versions')
     command = local("tar -cvzf " + fn + " ./web_static/")
     if command.succeeded:
