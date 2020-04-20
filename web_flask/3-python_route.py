@@ -22,6 +22,7 @@ def c(var):
     """Returns  in c"""
     return 'C %s' % var.replace('_', ' ')
 
+
 @app.route('/python', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
 def python(text="is cool"):
