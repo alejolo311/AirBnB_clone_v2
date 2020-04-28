@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """start flask and set a route"""
 
-from flask import Flask
+from flask import Flask, render_template
 app = Flask(__name__)
 
 
@@ -36,9 +36,9 @@ def num(n):
     return '%d is a number' % n
 
 
-@app.route('/number_template/<int:n>')
-def num_template(n):
-    """Returns  in template number"""
+@app.route('/number_template/<int:n>', strict_slashes=False)
+def number_template(n):
+    """Returns a template number"""
     return render_template('5-number.html', n=n)
 
 
